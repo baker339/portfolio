@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-// import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { IoMdMail } from "react-icons/io";
 import { skills, experience, projects } from "@/data/data";
 
 export default function Home() {
@@ -14,17 +15,10 @@ export default function Home() {
     const experienceScrollRef = useRef<HTMLDivElement | null>(null);
     const projectsScrollRef = useRef<HTMLDivElement | null>(null);
 
-    // useEffect(() => {
-    //     const centerFirstCard = (scrollRef: React.RefObject<HTMLDivElement | null>) => {
-    //         if (scrollRef.current) {
-    //             const firstCard = scrollRef.current.children[0] as HTMLElement;
-    //             firstCard.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
-    //         }
-    //     };
-    //
-    //     centerFirstCard(experienceScrollRef);
-    //     centerFirstCard(projectsScrollRef);
-    // }, []);
+    const copyEmailToClipboard = () => {
+        navigator.clipboard.writeText("aidanbaker.ab@gmail.com");
+        alert("Email copied to clipboard!");
+    };
 
     return (
         <div className="scroll-container bg-background text-textPrimary">
@@ -48,7 +42,24 @@ export default function Home() {
                     Aidan Baker
                 </motion.h1>
                 <p className="mt-2 text-lg text-textSecondary">Senior Full Stack Developer</p>
-                <p className="mt-2 text-lg text-textSecondary">aidanbaker.ab@gmail.com</p>
+
+                {/* Social Icons */}
+                <div className="flex space-x-6 mt-4">
+                    {/* Email (Copy to Clipboard) */}
+                    <button onClick={copyEmailToClipboard} className="flex items-center space-x-2 text-primary hover:text-green-600 transition">
+                        <IoMdMail className="w-6 h-6 font-bold" />
+                    </button>
+
+                    {/* LinkedIn */}
+                    <a href="https://www.linkedin.com/in/aidanbaker" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-blue-600 transition">
+                        <FaLinkedin className="w-6 h-6" />
+                    </a>
+
+                    {/* GitHub */}
+                    <a href="https://github.com/baker339" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-gray-800 transition">
+                        <FaGithub className="w-6 h-6" />
+                    </a>
+                </div>
 
                 {/* Navigation Buttons */}
                 <nav className="mt-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
@@ -65,10 +76,17 @@ export default function Home() {
             </section>
 
             {/* Education Section */}
-            <section id="education" className="scroll-section bg-white flex items-center justify-center text-center">
+            <section id="education" className="scroll-section bg-white flex flex-col gap-10 items-center justify-center text-center">
                 <motion.div className="max-w-4xl">
                     <h2 className="text-4xl font-bold text-primary mb-6">Education</h2>
                     <p className="mt-2 text-textSecondary"><strong>Purdue University</strong> - B.S. Industrial Engineering</p>
+                    <p className="mt-2 text-textSecondary">Graduated May 2019</p>
+                </motion.div>
+                <motion.div className="max-w-4xl">
+                    <h2 className="text-4xl font-bold text-primary mb-6">Spoken Languages</h2>
+                    <p className="mt-2 text-textSecondary"><strong>English</strong> - Native</p>
+                    <p className="mt-2 text-textSecondary"><strong>French</strong> - Fluent</p>
+                    <p className="mt-2 text-textSecondary"><strong>Spanish</strong> - Basic</p>
                 </motion.div>
             </section>
 
@@ -116,7 +134,7 @@ export default function Home() {
                 <motion.div className="max-w-6xl w-full">
                     <h2 className="text-4xl font-bold text-primary mb-6">Experience</h2>
                     <p className="text-gray-500 italic mb-4">Swipe to see more</p>
-                    <div ref={experienceScrollRef} className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-10 py-6 space-x-6">
+                    <div ref={experienceScrollRef} className="flex overflow-x-auto snap-x snap-mandatory px-10 py-6 space-x-6">
                         {experience.map((job, index) => (
                             <motion.div
                                 key={index}
