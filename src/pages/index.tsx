@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+// import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { skills, experience, projects } from "@/data/data";
 
@@ -13,17 +14,17 @@ export default function Home() {
     const experienceScrollRef = useRef<HTMLDivElement | null>(null);
     const projectsScrollRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const centerFirstCard = (scrollRef: React.RefObject<HTMLDivElement | null>) => {
-            if (scrollRef.current) {
-                const firstCard = scrollRef.current.children[0] as HTMLElement;
-                firstCard.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
-            }
-        };
-
-        centerFirstCard(experienceScrollRef);
-        centerFirstCard(projectsScrollRef);
-    }, []);
+    // useEffect(() => {
+    //     const centerFirstCard = (scrollRef: React.RefObject<HTMLDivElement | null>) => {
+    //         if (scrollRef.current) {
+    //             const firstCard = scrollRef.current.children[0] as HTMLElement;
+    //             firstCard.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
+    //         }
+    //     };
+    //
+    //     centerFirstCard(experienceScrollRef);
+    //     centerFirstCard(projectsScrollRef);
+    // }, []);
 
     return (
         <div className="scroll-container bg-background text-textPrimary">
