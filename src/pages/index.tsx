@@ -1,114 +1,174 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { skills, experience, projects } from "@/data/data";
 
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    const [selectedCategory, setSelectedCategory] = useState<"all" | "languages" | "frameworks" | "technologies">("all");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const filteredSkills =
+        selectedCategory === "all"
+            ? [...skills.languages, ...skills.frameworks, ...skills.technologies]
+            : skills[selectedCategory];
+
+    const experienceScrollRef = useRef<HTMLDivElement | null>(null);
+    const projectsScrollRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const centerFirstCard = (scrollRef: React.RefObject<HTMLDivElement | null>) => {
+            if (scrollRef.current) {
+                const firstCard = scrollRef.current.children[0] as HTMLElement;
+                firstCard.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
+            }
+        };
+
+        centerFirstCard(experienceScrollRef);
+        centerFirstCard(projectsScrollRef);
+    }, []);
+
+    return (
+        <div className="scroll-container bg-background text-textPrimary">
+            {/* Hero Section */}
+            <section className="scroll-section flex flex-col justify-center items-center text-center">
+                {/* Profile Image */}
+                <div className="w-32 h-32 mb-4">
+                    <img
+                        src="/profile.jpg"
+                        alt="Aidan Baker"
+                        className="rounded-full border-4 border-primary shadow-lg w-full h-full object-cover"
+                    />
+                </div>
+
+                <motion.h1
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1 }}
+                    className="text-5xl font-bold text-primary"
+                >
+                    Aidan Baker
+                </motion.h1>
+                <p className="mt-2 text-lg text-textSecondary">Senior Full Stack Developer</p>
+                <p className="mt-2 text-lg text-textSecondary">aidanbaker.ab@gmail.com</p>
+
+                {/* Navigation Buttons */}
+                <nav className="mt-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                    {["Education", "Skills", "Experience", "Projects"].map((section) => (
+                        <a
+                            key={section}
+                            href={`#${section.toLowerCase()}`}
+                            className="px-4 py-2 bg-secondary text-white font-semibold rounded-lg shadow-md transition transform hover:scale-105"
+                        >
+                            {section}
+                        </a>
+                    ))}
+                </nav>
+            </section>
+
+            {/* Education Section */}
+            <section id="education" className="scroll-section bg-white flex items-center justify-center text-center">
+                <motion.div className="max-w-4xl">
+                    <h2 className="text-4xl font-bold text-primary mb-6">Education</h2>
+                    <p className="mt-2 text-textSecondary"><strong>Purdue University</strong> - B.S. Industrial Engineering</p>
+                </motion.div>
+            </section>
+
+            {/* Skills Section */}
+            <section id="skills" className="scroll-section bg-white flex flex-col items-center text-center px-4">
+                <motion.div className="max-w-4xl w-full">
+                    <h2 className="text-4xl font-bold text-primary mb-6">Technical Skills</h2>
+
+                    {/* Filter Buttons */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-6">
+                        {["All", "Languages", "Frameworks", "Technologies"].map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => setSelectedCategory(category.toLowerCase() as "all" | "languages" | "frameworks" | "technologies")}
+                                className={`px-4 py-2 rounded-lg font-semibold shadow-md transition-all ${
+                                    selectedCategory === category.toLowerCase()
+                                        ? "bg-primary text-white"
+                                        : "bg-gray-200 text-textPrimary hover:bg-gray-300"
+                                }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Skills Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-textSecondary">
+                        {filteredSkills.map((skill) => (
+                            <motion.span
+                                key={skill}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5 }}
+                                className="bg-gray-200 px-3 py-1 rounded-md shadow-md text-sm md:text-base"
+                            >
+                                {skill}
+                            </motion.span>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Experience Section */}
+            <section id="experience" className="scroll-section bg-white flex items-center justify-center text-center">
+                <motion.div className="max-w-6xl w-full">
+                    <h2 className="text-4xl font-bold text-primary mb-6">Experience</h2>
+                    <p className="text-gray-500 italic mb-4">Swipe to see more</p>
+                    <div ref={experienceScrollRef} className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-10 py-6 space-x-6">
+                        {experience.map((job, index) => (
+                            <motion.div
+                                key={index}
+                                className="snap-center flex-shrink-0 bg-gray-100 p-6 rounded-lg w-[80vw] max-w-[500px] shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: index * 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                <h3 className="text-xl font-semibold">{job.company} ({job.role})</h3>
+                                <p className="text-gray-500">{job.duration}</p>
+                                <ul className="list-disc ml-5 mt-2 text-textPrimary text-left">
+                                    {job.responsibilities.map((task, idx) => (
+                                        <li key={idx}>{task}</li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Projects Section */}
+            <section id="projects" className="scroll-section bg-white flex items-center justify-center text-center">
+                <motion.div className="max-w-6xl w-full">
+                    <h2 className="text-4xl font-bold text-primary mb-6">Projects</h2>
+                    <p className="text-gray-500 italic mb-4">Swipe to see more</p>
+                    <div ref={projectsScrollRef} className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-10 py-6 space-x-6">
+                        {projects.map((project, index) => (
+                            <motion.div
+                                key={index}
+                                className="snap-center flex-shrink-0 bg-gray-100 p-6 rounded-lg w-[80vw] max-w-[500px] shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: index * 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                <h3 className="text-2xl font-semibold">{project.name}</h3>
+                                <p className="text-gray-600 mt-2">{project.description}</p>
+                                <p className="text-gray-500 mt-1">Tech: {project.tech}</p>
+                                <div className="mt-4 flex space-x-4 justify-center">
+                                    <a href={project.website} className="text-accent underline">Website</a>
+                                    <a href={project.github} className="text-secondary underline">GitHub</a>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+            {/* Footer Section */}
+            <footer className="bg-gray-100 text-center py-6 mt-12">
+                <p className="text-gray-500">&copy; {new Date().getFullYear()} Aidan Baker. All rights reserved.</p>
+            </footer>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
